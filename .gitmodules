@@ -1,0 +1,3 @@
+[submodule "third part/emgr"]
+	path = third part/emgr
+	url = https://github.com/gramian/emgr.git
