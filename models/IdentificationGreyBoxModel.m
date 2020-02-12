@@ -28,11 +28,13 @@ classdef (Abstract) IdentificationGreyBoxModel < handle
     
     properties
         param_init_value
-        fs
+        param_minimum
+        param_maximum
+        Ts
     end
     
     properties (SetObservable)
-        param_free_state
+        param_free_state    
     end
     
     properties
@@ -50,13 +52,16 @@ classdef (Abstract) IdentificationGreyBoxModel < handle
     end
     
     methods (Sealed)
+        function [A, B, C, D] = init_model( obj )
+            [A, B, C, D] = model(obj, obj.param_init_value, obj.Ts);
+        end
         function [A, B, C, D] = nominal_model( obj )
-            [A, B, C, D] = model(obj, obj.param_nominal_value, 1/obj.fs);
+            [A, B, C, D] = model(obj, obj.param_nominal_value, obj.Ts);
         end
         function [A, B, C, D] = augmented_model( obj, x_a )
             param = obj.param_init_value;
             param(obj.param_free_indice) = x_a(obj.N_state+1:end);
-            [A, B, C, D] = model( obj, param, 1/obj.fs );
+            [A, B, C, D] = model( obj, param, obj.Ts );
         end
         function x_a_dot = augmented_model_state_transition( obj, x_a, u )
             [A, B, ~, ~] = obj.augmented_model( x_a );
@@ -69,11 +74,20 @@ classdef (Abstract) IdentificationGreyBoxModel < handle
         end
     end
     methods
-        function obj = IdentificationGreyBoxModel( param_init_value, param_free_state, fs )
+        function obj = IdentificationGreyBoxModel( Ts, varargin )
             addlistener(obj, 'param_free_state', 'PostSet', @obj.change_param_free_indice);
-            obj.param_init_value = param_init_value;
-            obj.param_free_state = param_free_state;
-            obj.fs               = fs;
+            inParser = inputParser;
+            inParser.addRequired('Ts', @isnumeric);
+            inParser.addParameter('InitValue', obj.param_nominal_value);
+            inParser.addParameter('FreeState', true(1, obj.N_param));
+            inParser.addParameter('Min', -Inf(1, obj.N_param));
+            inParser.addParameter('Max', Inf(1, obj.N_param));
+            inParser.parse(Ts, varargin{:}{:});
+            obj.Ts = inParser.Results.Ts;
+            obj.param_init_value = inParser.Results.InitValue;
+            obj.param_free_state = inParser.Results.FreeState;
+            obj.param_minimum    = inParser.Results.Min;
+            obj.param_maximum    = inParser.Results.Max;
         end
     end
 end

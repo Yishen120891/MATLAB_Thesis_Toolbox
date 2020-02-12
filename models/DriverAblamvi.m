@@ -1,4 +1,4 @@
-classdef DriverModelAblamvi < IdentificationGreyBoxModel
+classdef DriverAblamvi < IdentificationGreyBoxModel
     properties (Constant)
         N_state     = 3
         N_input     = 4
@@ -12,8 +12,8 @@ classdef DriverModelAblamvi < IdentificationGreyBoxModel
     end
     
     methods
-        function obj = DriverModelAblamvi( param_init_value, param_free_state, fs)
-            obj = obj@IdentificationGreyBoxModel(param_init_value, param_free_state, fs);
+        function obj = DriverAblamvi( Ts, varargin )
+            obj = obj@IdentificationGreyBoxModel(Ts, varargin);
         end
         function [A, B, C, D] = model( obj, param, Ts )
             A = zeros(obj.N_state, obj.N_state);

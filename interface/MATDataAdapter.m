@@ -11,7 +11,7 @@ classdef MATDataAdapter
     %   function "select_indices".
     
     %% Private properties of data information
-    properties (Access = private)
+    properties (Access = public)
         mat_data
         %{ 
           Author list
@@ -85,7 +85,7 @@ classdef MATDataAdapter
         end
         function value = get.road_center_x ( obj )
             switch ( obj.author )
-                case 1
+                case {-2,1}
                     value = obj.mat_data.txt_data.RoadX(obj.indice_span);
                 otherwise
                     value = NaN;
@@ -93,7 +93,7 @@ classdef MATDataAdapter
         end
         function value = get.road_center_y ( obj )
             switch ( obj.author )
-                case 1
+                case {-2,1}
                     value = obj.mat_data.txt_data.RoadY(obj.indice_span);
                 otherwise
                     value = NaN;
@@ -101,8 +101,8 @@ classdef MATDataAdapter
         end
         function value = get.road_angle_rad ( obj )
             switch ( obj.author )
-                case 1
-                    value = obj.mat_data.txt_data.Road_angle(obj.indice_span);
+                case {-2,1}
+                    value = obj.mat_data.txt_data.RoadAngle(obj.indice_span);
                 otherwise
                     value = NaN;
             end
@@ -111,7 +111,7 @@ classdef MATDataAdapter
             switch ( obj.author )
                 case 0
                     value = obj.mat_data.SCRIPT.RoadWidth;
-                case 1
+                case {-2,1}
                     value = 19;
                 otherwise
                     value = NaN;
@@ -119,6 +119,8 @@ classdef MATDataAdapter
         end
         function value = get.road_curvature ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.rho_ref0(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.rho_ref(obj.indice_span);
                 otherwise
@@ -129,7 +131,7 @@ classdef MATDataAdapter
             switch ( obj.author )
                 case 0
                     value = obj.mat_data.SCRIPT.LaneWidth;
-                case 1
+                case {-2, 1}
                     value = 3.5;
                 otherwise
                     value = NaN;
@@ -137,6 +139,8 @@ classdef MATDataAdapter
         end
         function value = get.speed_x ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.v(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.vx(obj.indice_span);
                 otherwise
@@ -159,6 +163,8 @@ classdef MATDataAdapter
         end
         function value = get.heading_relative_rad ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.Psi_L(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.Psi_L_calcul(obj.indice_span);
                 otherwise
@@ -167,7 +173,7 @@ classdef MATDataAdapter
         end
         function value = get.drift_angle_rad ( obj )
             switch ( obj.author )
-                case 1
+                case {-2,1}
                     value = obj.mat_data.txt_data.Beta(obj.indice_span);
                 otherwise
                     value = NaN;
@@ -175,7 +181,7 @@ classdef MATDataAdapter
         end
         function value = get.yaw_rate_rad ( obj )
             switch ( obj.author )
-                case 1
+                case {-2, 1}
                     value = obj.mat_data.txt_data.r(obj.indice_span);
                 otherwise
                     value = NaN;
@@ -183,6 +189,8 @@ classdef MATDataAdapter
         end
         function value = get.lateral_error ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.y_act(obj.indice_span);
                 case 1
                     value = -obj.mat_data.txt_data.Y_Road(obj.indice_span);
                 otherwise
@@ -191,6 +199,8 @@ classdef MATDataAdapter
         end
         function value = get.lateral_error_at_distance ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.yL_nf(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.Y_L_calcul(obj.indice_span);
                 otherwise
@@ -199,6 +209,8 @@ classdef MATDataAdapter
         end
         function value = get.steering_wheel_angle_rad ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.deltad(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.delta_d(obj.indice_span);
                 otherwise
@@ -219,6 +231,8 @@ classdef MATDataAdapter
         end
         function value = get.vehicle_rear_axle_center_x ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.vhcl_x(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.Vehicle_X(obj.indice_span);
                 otherwise
@@ -227,6 +241,8 @@ classdef MATDataAdapter
         end
         function value = get.vehicle_rear_axle_center_y ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.vhcl_y(obj.indice_span);                
                 case 1
                     value = obj.mat_data.txt_data.Vehicle_Y(obj.indice_span);
                 otherwise
@@ -251,6 +267,8 @@ classdef MATDataAdapter
         end
         function value = get.driver_torque ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.SteeringT(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.T_Pilot_inversed(obj.indice_span);
                 otherwise
@@ -265,6 +283,8 @@ classdef MATDataAdapter
         end
         function value = get.assistance_torque ( obj )
             switch ( obj.author )
+                case -2
+                    value = obj.mat_data.txt_data.H2_couple(obj.indice_span);
                 case 1
                     value = obj.mat_data.txt_data.Tc(obj.indice_span);
                 otherwise

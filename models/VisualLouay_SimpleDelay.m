@@ -1,4 +1,4 @@
-classdef TwoPointsVisualModelLouay < IdentificationGreyBoxModel
+classdef VisualLouay_SimpleDelay < IdentificationGreyBoxModel
     
     properties (Constant)
         N_state     = 2
@@ -13,8 +13,8 @@ classdef TwoPointsVisualModelLouay < IdentificationGreyBoxModel
     end
     
     methods
-        function obj = TwoPointsVisualModelLouay( param_init_value, param_free_state, fs)
-            obj = obj@IdentificationGreyBoxModel(param_init_value, param_free_state, fs);
+        function obj = VisualLouay_SimpleDelay( Ts, varargin )
+            obj = obj@IdentificationGreyBoxModel(Ts, varargin);
         end
         function [ A, B, C, D ] = model( obj, param, Ts )
             A = zeros(obj.N_state, obj.N_state);
@@ -26,15 +26,12 @@ classdef TwoPointsVisualModelLouay < IdentificationGreyBoxModel
             [K_p, K_c, T_I, T_L, tau_p, v] = param_cell{:};
             
             A(1,1) = -1/T_I;
-            A(2,1) = -2/tau_p*(K_c/v)*(T_L/T_I-1);
-            A(2,2) = -2/tau_p;
+            A(2,1) = 1/tau_p*(K_c/v)*(1-T_L/T_I);
+            A(2,2) = -1/tau_p;
             B(1,2) = 1/T_I;
-            B(2,1) = 2/tau_p*K_p;
-            B(2,2) = 2/tau_p*(K_c/v)*(T_L/T_I);
-            C(1,1) = K_c/v*(T_L/T_I-1);
-            C(1,2) = 2;
-            D(1,1) = -K_p;
-            D(1,2) = -K_c/v*T_L/T_I;
+            B(2,1) = 1/tau_p*K_p;
+            B(2,2) = 1/tau_p*(K_c/v)*(T_L/T_I);
+            C(1,2) = 1;
 
             % Discretization
             if Ts > 0

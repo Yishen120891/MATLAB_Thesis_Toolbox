@@ -1,4 +1,4 @@
-classdef DriverModelLouay < IdentificationGreyBoxModel
+classdef DriverLouay < IdentificationGreyBoxModel
     %UNTITLED6 Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -15,8 +15,8 @@ classdef DriverModelLouay < IdentificationGreyBoxModel
     end
     
     methods
-        function obj = DriverModelLouay( param_init_value, param_free_state, fs)
-            obj = obj@IdentificationGreyBoxModel(param_init_value, param_free_state, fs);
+        function obj = DriverLouay( Ts, varargin )
+            obj = obj@IdentificationGreyBoxModel(Ts, varargin);
         end
         function [A, B, C, D] = model( obj, param, Ts )
             A = zeros(obj.N_state, obj.N_state);
